@@ -70,15 +70,13 @@
                 <tr>
                     <td>
     <p>Выбрать по расширениям:
-    <p><select multiple>
-        <option>Pidor</option>
-        <option>Pizda</option>
+    <p><select id="extension_list" multiple>
+        <!-- Populated programmatically -->
     </select>
         </td>
         <td rowspan="3">
     <p><select id="file_list" size="20" multiple>
-        <option>Pidor</option>
-        <option>Pizda</option>
+        <!-- Populated programmatically -->
     </select>
         </td>
         </tr>
@@ -117,20 +115,41 @@
 <script type="text/javascript">
     (function () {
         var $file_list_select = $("select#file_list");
+        var $extension_list_select = $("select#extension_list")
 
         $("#file").on("change", function (evt) {
             $file_list_select.html("");
+            $extension_list_select.html("");
 
             $("div#step2").hide();
             $("#error_unzip").hide();
 
             JSZip.loadAsync(evt.target.files[0])
                 .then(function (zip) {
+                    var $file_extensions = {};
+
                     zip.forEach(function (relativePath, zipEntry) {
-                        $file_list_select.append($("<option>", {
-                            text: zipEntry.name
-                        }));
+                        if(!zipEntry.dir) {
+                            $file_name = zipEntry.name;
+                            $file_extension = $file_name.split('.').pop();
+
+                            $file_list_select.append($("<option>", {
+                                value: $file_name,
+                                text: $file_name
+                            }));
+
+                            console.log($file_extension);
+
+                            $file_extensions[$file_extension] = true;
+                        }
                     });
+
+                    for(var $extension in $file_extensions) {
+                        $extension_list_select.append($("<option>", {
+                            value: $extension,
+                            text: "." + $extension
+                        }));
+                    }
 
                     $("div#step2").slideDown();
                 }, function (e) {
