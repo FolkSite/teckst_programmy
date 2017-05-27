@@ -60,12 +60,12 @@
     }
 </script>
 
-<div id="step2" style="display: none">
+<div id="step2" style="display: none;">
     <hr/>
 
     <p>2. Выбрать файлы для включения в документ:
 
-    <form class="file_selection">
+    <p><form class="file_selection">
         <table>
             <tr>
                 <td>
@@ -74,7 +74,7 @@
                         <!-- Populated programmatically -->
                     </select>
                 </td>
-                <td rowspan="3">
+                <td rowspan="2">
                     <p><select id="file_list" size="20" multiple>
                         <!-- Populated programmatically -->
                     </select>
@@ -93,22 +93,28 @@
                     </ul>
                 </td>
             </tr>
+            <tr>
+                <td colspan="2" style="text-align: center; padding: 20px 0;">
+                    <input id="pognali" type="button" value="Слабать хуйню"/>
+                </td>
+            </tr>
         </table>
     </form>
 </div>
 
-<div id="step3" style="display: none">
-    <hr/>
-
-    <p>3. Скопировать размеченный документ:
+<div id="error_none_selected" style="display: none;">
+    <em style="color: red">Не выбрано ни одного файла</em>
 </div>
 
-<div id="step4" style="display: none">
-    <hr/>
+<div id="step3" style="display: none; width: 100%;">
+    <div style="width: 800px; margin: auto;">
+        <hr/>
 
-    <p>4. Вставить его в шаблон документа (<a href="#">скачать шаблон</a>).
-    <p>К сожалению, размечать заголовки соответствующими стилями, чтобы ворд правильно отобразил оглавление, придется
-        вручную
+        <p>3. Скопировать размеченный текст и вставить его в <a href="#">шаблон документа</a>.
+    </div>
+    <div id="layed_out_code">
+
+    </div>
 </div>
 
 <script type="text/javascript">
@@ -121,7 +127,10 @@
             $extension_list_select.html("");
 
             $("div#step2").hide();
-            $("#error_unzip").hide();
+            $("div#error_unzip").hide();
+
+            $("div#step3").hide();
+            $("div#error_none_selected").hide();
 
             JSZip.loadAsync(evt.target.files[0])
                 .then(function(zip) {
@@ -166,6 +175,31 @@
             });
 
             console.log($extension);
+        });
+
+        $("input#pognali").on("click", function(evt){
+            $("div#step3").hide();
+
+            $("div#error_none_selected").hide();
+
+            var $selected_options = $file_list_select.children("option:selected");
+
+            if($selected_options.length > 0) {
+                var $results_div = $("div#layed_out_code");
+
+                $results_div.html("");
+
+                $selected_options.each(function() {
+                    $results_div.append($("<p>", {
+                        text: $(this).attr("value")
+                    }));
+                });
+
+                $("div#step3").slideDown();
+            }
+            else {
+                $("div#error_none_selected").show();
+            }
         });
     })();
 </script>
