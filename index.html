@@ -70,7 +70,7 @@
             <tr>
                 <td>
                     <p>Выбрать по расширениям:
-                    <p><select id="extension_list" multiple>
+                    <p><select id="extension_list" size="8" multiple>
                         <!-- Populated programmatically -->
                     </select>
                 </td>
@@ -112,11 +112,11 @@
 </div>
 
 <script type="text/javascript">
-    (function () {
+    (function() {
         var $file_list_select = $("select#file_list");
-        var $extension_list_select = $("select#extension_list")
+        var $extension_list_select = $("select#extension_list");
 
-        $("#file").on("change", function (evt) {
+        $("#file").on("change", function(evt) {
             $file_list_select.html("");
             $extension_list_select.html("");
 
@@ -124,20 +124,18 @@
             $("#error_unzip").hide();
 
             JSZip.loadAsync(evt.target.files[0])
-                .then(function (zip) {
+                .then(function(zip) {
                     var $file_extensions = {};
 
-                    zip.forEach(function (relativePath, zipEntry) {
+                    zip.forEach(function(relativePath, zipEntry) {
                         if(!zipEntry.dir) {
                             $file_name = zipEntry.name;
-                            $file_extension = $file_name.split('.').pop();
+                            $file_extension = $file_name.split(".").pop().toLowerCase();
 
                             $file_list_select.append($("<option>", {
                                 value: $file_name,
                                 text: $file_name
                             }));
-
-                            console.log($file_extension);
 
                             $file_extensions[$file_extension] = true;
                         }
@@ -151,9 +149,23 @@
                     }
 
                     $("div#step2").slideDown();
-                }, function (e) {
+                }, function(e) {
                     $("#error_unzip").show();
                 });
+        });
+
+        $extension_list_select.on("click", "option", function(evt) {
+            var $extension = evt.target.value;
+
+            $("select#file_list option").each(function() {
+                var $current_extension = $(this).attr("value").split(".").pop().toLowerCase();
+
+                if($current_extension === $extension) {
+                    $(this).attr("selected", evt.target.selected);
+                }
+            });
+
+            console.log($extension);
         });
     })();
 </script>
