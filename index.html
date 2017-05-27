@@ -1,0 +1,115 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+    <style type="text/css">
+        body {
+            text-align: center;
+        }
+
+        body > div {
+            width: 800px;
+            margin: auto;
+            text-align: left;
+        }
+
+        form.file_selection table {
+            width: 100%;
+        }
+
+        form.file_selection td {
+            width: 50%;
+            padding: 0 20px;
+            vertical-align: top;
+        }
+
+        form.file_selection select {
+            width: 100%;
+        }
+
+        form.file_selection ul.syntax_highlight select {
+            width: auto;
+            display: inline-block;
+        }
+
+
+    </style>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+</head>
+<body>
+<h2 align="center">Подготовка документа "Текст программы" для курсача</h2>
+
+<div id="error_unsupported" style="display: none;">
+    <em style="color: red">Нихуя не получится, так как у вас установлен говеный браузер, в котором не поддерживается File API</em>
+</div>
+
+<div id="step1">
+    <p>1. Загрузить свой проект в виде zip-архива: <input type="file" id="file"/>
+    <p><em>Внимание: обработка файлов происходит на клиенте</em>
+
+    <div id="result"></div>
+</div>
+
+<script type="text/javascript">
+    if (!window.FileReader || !window.ArrayBuffer) {
+        $("#step1").hide();
+        $("#error_unsupported").show();
+    }
+</script>
+
+<hr/>
+
+<div id="step2">
+    <p>2. Выбрать файлы для включения в документ:
+    <p>
+        <form class="file_selection">
+            <table>
+                <tr>
+                    <td>
+    <p>Выбрать по расширениям:
+    <p><select multiple>
+        <option>Pidor</option>
+        <option>Pizda</option>
+    </select>
+        </td>
+        <td rowspan="3">
+    <p><select size="20" multiple>
+        <option>Pidor</option>
+        <option>Pizda</option>
+    </select>
+        </td>
+        </tr>
+        <tr>
+            <td>
+    <p>Подсветка синтаксиса:
+    <p>
+    <ul class="syntax_highlight">
+        <li>.cs: <select>
+            <option>C#</option>
+        </select>
+        <li>.xaml: <select>
+            <option>XML</option>
+        </select>
+    </ul>
+    </td>
+    </tr>
+    </table>
+    </form>
+</div>
+
+<hr/>
+
+<div id="step3">
+    <p>3. Скопировать размеченный документ:
+</div>
+
+<hr/>
+
+<div id="step4">
+    <p>4. Вставить его в шаблон документа (<a href="#">скачать шаблон</a>).
+    <p>К сожалению, размечать заголовки соответствующими стилями, чтобы ворд правильно отобразил оглавление, придется
+        вручную
+</div>
+</body>
+</html>
