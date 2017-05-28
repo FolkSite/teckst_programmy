@@ -105,13 +105,8 @@
             <tr>
                 <td>
                     <p>Подсветка синтаксиса:
-                    <p><ul class="syntax_highlight">
-                        <li>.cs: <select>
-                            <option>C#</option>
-                        </select>
-                        <li>.xaml: <select>
-                            <option>XML</option>
-                        </select>
+                    <p><ul class="syntax_highlighting_settings">
+                        <!-- Populated programmatically -->
                     </ul>
                 </td>
             </tr>
@@ -140,6 +135,17 @@
 </div>
 
 <script type="text/javascript">
+    var $syntax_classes = [
+        ["(никакая)", ""],
+        ["C#", "csharp"],
+        ["XML", "xml"],
+        ["Java", "java"]
+    ];
+
+    var getSyntaxClassByExtension = function(extension) {
+
+    };
+
     (function() {
         var $zip_archive;
 
@@ -176,12 +182,35 @@
                         }
                     });
 
+                    var $syntax_highlighting_settings = $(".syntax_highlighting_settings");
+                    $syntax_highlighting_settings.html("");
+
                     for(var $extension in $file_extensions) {
                         $extension_list_select.append($("<option>", {
                             value: $extension,
                             text: "." + $extension
                         }));
+
+                        $syntax_highlighting_settings.append($("<li>", {
+                            text: "." + $extension + ": "
+                        }).append($("<select>", {
+                            class: "syntax_classes",
+                            id: "extension"
+                        })));
                     }
+
+                    var $syntax_classes_selects = $("select.syntax_classes");
+
+                    $syntax_classes_selects.html("");
+
+                    $syntax_classes.forEach(function($syntax_class) {
+                        console.log($syntax_classes_selects);
+
+                        $syntax_classes_selects.append($("<option>", {
+                            value: $syntax_class[1],
+                            text: $syntax_class[0]
+                        }));
+                    });
 
                     $("div#step2").slideDown();
                 }, function(e) {
@@ -189,6 +218,9 @@
                 });
         });
 
+        /*
+         * TODO: bind to "selected" attribute change
+         */
         $extension_list_select.on("click", "option", function(evt) {
             var $extension = evt.target.value;
 
