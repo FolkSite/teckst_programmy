@@ -119,10 +119,14 @@
 
 <script type="text/javascript">
     (function() {
+        var $zip_archive;
+
         var $file_list_select = $("select#file_list");
         var $extension_list_select = $("select#extension_list");
 
         $("#file").on("change", function(evt) {
+            $zip_archive = evt.target.files[0];
+
             $file_list_select.html("");
             $extension_list_select.html("");
 
@@ -189,11 +193,31 @@
 
                 $results_div.html("");
 
+                var $selected_files = {};
+
                 $selected_options.each(function() {
-                    $results_div.append($("<p>", {
-                        text: $(this).attr("value")
-                    }));
+                    $selected_files[$(this).attr("value")] = true;
                 });
+
+                JSZip.loadAsync($zip_archive)
+                    .then(function(zip) {
+                        zip.forEach(function(relativePath, zipEntry) {
+                            if($selected_files[zipEntry.name]) {
+                                zipEntry.async("string").then(
+                                    function(content) {
+                                        $results_div.append($("<h2>", {
+                                            text: zipEntry.name
+                                        }));
+
+                                        $results_div.append($("<pre>", {
+                                            text: content
+                                        }));
+                                    },
+                                    function() { }
+                                );
+                            }
+                        });
+                    }, function() { });
 
                 $("div#step3").slideDown();
             }
