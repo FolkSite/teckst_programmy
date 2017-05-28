@@ -29,7 +29,16 @@
             width: 100%;
         }
 
-        form.file_selection ul.syntax_highlight select {
+        form.file_selection select#file_list {
+            min-height: 300px;
+            height: 100%;
+        }
+
+        .height100 {
+            height: 100%;
+        }
+
+        form.file_selection .syntax_highlighting_settings select {
             width: auto;
             display: inline-block;
         }
@@ -87,8 +96,8 @@
                         <!-- Populated programmatically -->
                     </select>
                 </td>
-                <td rowspan="2">
-                    <p><select id="file_list" size="20" multiple>
+                <td class="height100" rowspan="2">
+                    <p class="height100"><select id="file_list" multiple>
                         <!-- Populated programmatically -->
                     </select>
                 </td>
@@ -107,7 +116,7 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="2" style="text-align: center; padding: 20px 0;">
+                <td colspan="2" style="text-align: center; padding: 40px 0 20px;">
                     <input id="pognali" type="button" value="Слабать хуйню"/>
                 </td>
             </tr>
