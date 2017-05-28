@@ -193,7 +193,7 @@
 
                         $syntax_highlighting_settings.append($("<li>", {
                             text: "." + $extension + ": ",
-                            class: "syntax_classes"
+                            "class": "syntax_classes"
                         }).hide().append($("<select>", {
                             id: $extension
                         })));
@@ -293,7 +293,7 @@
 
                                         $results_div.append($("<pre>", {
                                             text: content,
-                                            class: $(".syntax_classes select#" + $extension).val()
+                                            "class": $(".syntax_classes select#" + $extension).val()
                                         }));
                                     },
                                     function() { }
