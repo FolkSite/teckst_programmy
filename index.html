@@ -145,7 +145,7 @@
         ["F#", "fs"],
         ["Go", "go"],
         ["Haskell", "hs"],
-        ["HTML, XML", "xml"],
+        ["HTML/XML", "xml"],
         ["Java", "java"],
         ["JavaScript", "js"],
         ["Lua", "lua"],
@@ -163,7 +163,42 @@
         ["VB.NET", "vb"]
     ];
 
-    var getSyntaxClassByExtension = function(extension) {
+    var $default_syntax_for_extension = {
+        "sh": "sh",
+        "cs": "cs",
+
+        "cpp": "cpp",
+        "c": "cpp",
+        "h": "cpp",
+        "hpp": "cpp",
+
+        "css": "css",
+        "bat": "bat",
+        "fs": "fs",
+        "go": "go",
+        "hs": "hs",
+
+        "html": "xml",
+        "xml": "xml",
+        "xaml": "xml",
+
+        "java": "java",
+        "js": "js",
+        "lua": "lua",
+        "nb": "mma",
+        "mlx": "matlab",
+
+        "m": "objc",
+        "pl": "perl",
+        "py": "py",
+        "r": "r",
+        "rb": "rb",
+        "sql": "sql",
+
+        "tex": "tex",
+        "latex": "tex",
+
+        "vb": "vb"
 
     };
 
@@ -231,6 +266,16 @@
                             value: $syntax_class[1],
                             text: $syntax_class[0]
                         }));
+                    });
+
+                    $syntax_classes_selects.each(function() {
+                        var $current_extension = $(this).attr("id");
+
+                        var $default_syntax = $default_syntax_for_extension[$current_extension];
+
+                        if($default_syntax) {
+                            $(this).val($default_syntax);
+                        }
                     });
 
                     $("div#step2").slideDown();
