@@ -219,16 +219,19 @@
         });
 
         /*
-         * TODO: bind to "selected" attribute change
+         * TODO: change selection only for files of the extensions of which "selected" the property was changed
          */
-        $extension_list_select.on("click", "option", function(evt) {
-            var $extension = evt.target.value;
+        $extension_list_select.on("change", function(evt) {
+            var $extensions = $(evt.target).val();
 
             $("select#file_list option").each(function() {
                 var $current_extension = $(this).attr("value").split(".").pop().toLowerCase();
 
-                if($current_extension === $extension) {
-                    $(this).attr("selected", evt.target.selected);
+                if($extensions.indexOf($current_extension) >= 0) {
+                    $(this).attr("selected", true);
+                }
+                else {
+                    $(this).removeAttr("selected");
                 }
             });
         });
