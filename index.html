@@ -41,6 +41,8 @@
             integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
             crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/highlight.min.js"></script>
 </head>
 <body>
 <h2 style="text-align: center;">Подготовка документа "Текст программы" для курсача</h2>
@@ -118,8 +120,8 @@
 
         <p>3. Скопировать размеченный текст и вставить его в <a href="#">шаблон документа</a>.
     </div>
-    <div id="layed_out_code">
-
+    <div id="layout">
+        <!-- Populated programmatically -->
     </div>
 </div>
 
@@ -183,8 +185,6 @@
                     $(this).attr("selected", evt.target.selected);
                 }
             });
-
-            console.log($extension);
         });
 
         $("input#pognali").on("click", function(evt){
@@ -195,7 +195,7 @@
             var $selected_options = $file_list_select.children("option:selected");
 
             if($selected_options.length > 0) {
-                var $results_div = $("div#layed_out_code");
+                var $results_div = $("div#layout");
 
                 $results_div.html("");
 
@@ -216,7 +216,8 @@
                                         }));
 
                                         $results_div.append($("<pre>", {
-                                            text: content
+                                            text: content,
+                                            class: "csharp"
                                         }));
                                     },
                                     function() { }
@@ -224,6 +225,15 @@
                             }
                         });
                     }, function() { });
+
+                /*
+                 * TODO: figure out how to do this properly
+                 */
+                setTimeout(function() {
+                    $('pre').each(function(i, block) {
+                        hljs.highlightBlock(block);
+                    });
+                }, 1000);
 
                 $("div#step3").slideDown();
             }
