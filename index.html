@@ -239,6 +239,8 @@
                     $(this).removeAttr("selected");
                 }
             });
+
+            $file_list_select.change();
         });
 
         $file_list_select.on("change", function(evt) {
@@ -281,6 +283,8 @@
                     .then(function(zip) {
                         zip.forEach(function(relativePath, zipEntry) {
                             if($selected_files[zipEntry.name]) {
+                                var $extension = zipEntry.name.split(".").pop();
+
                                 zipEntry.async("string").then(
                                     function(content) {
                                         $results_div.append($("<h2>", {
@@ -289,7 +293,7 @@
 
                                         $results_div.append($("<pre>", {
                                             text: content,
-                                            class: "csharp"
+                                            class: $(".syntax_classes select#" + $extension).val()
                                         }));
                                     },
                                     function() { }
