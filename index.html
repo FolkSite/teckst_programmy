@@ -103,7 +103,7 @@
                 </td>
             </tr>
             <tr>
-                <td>
+                <td class="height100">
                     <p>Подсветка синтаксиса:
                     <p><ul class="syntax_highlighting_settings">
                         <!-- Populated programmatically -->
@@ -192,14 +192,14 @@
                         }));
 
                         $syntax_highlighting_settings.append($("<li>", {
-                            text: "." + $extension + ": "
-                        }).append($("<select>", {
-                            class: "syntax_classes",
-                            id: "extension"
+                            text: "." + $extension + ": ",
+                            class: "syntax_classes"
+                        }).hide().append($("<select>", {
+                            id: $extension
                         })));
                     }
 
-                    var $syntax_classes_selects = $("select.syntax_classes");
+                    var $syntax_classes_selects = $(".syntax_classes select");
 
                     $syntax_classes_selects.html("");
 
@@ -219,7 +219,8 @@
         });
 
         /*
-         * TODO: change selection only for files of the extensions of which "selected" the property was changed
+         * TODO: Change selection only for files of the extensions of which "selected" the property was changed
+         * TODO: (see e967ed8 commit message)
          */
         $extension_list_select.on("change", function(evt) {
             var $extensions = $(evt.target).val();
@@ -227,11 +228,33 @@
             $("select#file_list option").each(function() {
                 var $current_extension = $(this).attr("value").split(".").pop().toLowerCase();
 
+                /*
+                 * TODO: Fix the problem when a change of the selected property of an option is no not visually
+                 * TODO: represented in Chrome if the user has clicked on the option before
+                 */
                 if($extensions.indexOf($current_extension) >= 0) {
                     $(this).attr("selected", true);
                 }
                 else {
                     $(this).removeAttr("selected");
+                }
+            });
+        });
+
+        $file_list_select.on("change", function(evt) {
+            var $file_extensions = {};
+
+            $file_list_select.val().forEach(function($filename) {
+                $file_extensions[$filename.split(".").pop()] = true;
+            });
+
+            var $syntax_classes_selects = $(".syntax_classes");
+
+            $syntax_classes_selects.hide();
+
+            $syntax_classes_selects.each(function() {
+                if($file_extensions[$(this).children("select").attr("id")]) {
+                    $(this).show();
                 }
             });
         });
