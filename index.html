@@ -277,8 +277,6 @@
                     $syntax_classes_selects.html("");
 
                     $syntax_classes.forEach(function($syntax_class) {
-                        console.log($syntax_classes_selects);
-
                         $syntax_classes_selects.append($("<option>", {
                             value: $syntax_class[1],
                             text: $syntax_class[0]
@@ -344,7 +342,7 @@
             });
         });
 
-        $("input#pognali").on("click", function(evt){
+        $("input#pognali").on("click", function(evt) {
             $("div#step3").hide();
 
             $("div#error_none_selected").hide();
@@ -383,16 +381,13 @@
                                 );
                             }
                         });
-                    }, function() { });
 
-                /*
-                 * TODO: figure out how to do this properly
-                 */
-                setTimeout(function() {
-                    $('pre').each(function(i, block) {
-                        hljs.highlightBlock(block);
+                        $(document).ready(function() {
+                            $('pre').each(function(i, block) {
+                                hljs.highlightBlock(block);
+                            });
+                        });
                     });
-                }, 1000);
 
                 $("div#step3").slideDown();
             }
