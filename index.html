@@ -9,6 +9,23 @@
             text-align: center;
         }
 
+        body > h2, body > div {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -o-user-select: none;
+        }
+
+        div#layout {
+            -moz-user-select: initial;
+            -webkit-user-select: auto;
+            -ms-user-select: initial;
+            user-select: initial;
+            -o-user-select: auto;
+
+        }
+
         body > div {
             width: 800px;
             margin: auto;
@@ -127,7 +144,7 @@
     <div style="width: 800px; margin: auto;">
         <hr/>
 
-        <p>3. Скопировать размеченный текст и вставить его в <a href="#">шаблон документа</a>.
+        <p>3. Выделить размеченный текст с помощью Cmd+A, скопировать его и вставить в <a href="#">шаблон документа</a>.
     </div>
     <div id="layout">
         <!-- Populated programmatically -->
