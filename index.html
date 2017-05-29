@@ -383,8 +383,7 @@
                                             text: content,
                                             "class": $(".syntax_classes select#" + $extension).val()
                                         }));
-                                    },
-                                    function() { }
+                                    }
                                 );
                             }
                         });
@@ -392,6 +391,57 @@
                         $(document).ready(function() {
                             $('pre').each(function(i, block) {
                                 hljs.highlightBlock(block);
+                            });
+
+                            /*
+                             * TODO: remove common directory prefix
+                             */
+
+                            /*
+                             * Add headings for folders
+                             */
+
+                            var new_folders = function($one_path, $another_path) {
+                                $one_path = $one_path.split("/");
+                                $another_path = $another_path.split("/");
+
+                                var $new_folders = [];
+
+                                for(var $i = 0; $i < Math.max($one_path.length, $another_path.length); $i++) {
+                                    if($one_path[$i] === $another_path[$i]) {
+                                        $new_folders.push(null);
+                                    }
+                                    else if($another_path[$i] === undefined) {
+                                        break;
+                                    }
+                                    else {
+                                        $new_folders.push($another_path[$i]);
+                                    }
+                                }
+
+                                return $new_folders;
+                            };
+
+                            $("div#layout pre").hide();
+
+                            var $previous_text = "";
+
+                            $("div#layout h2").each(function() {
+                                $new_folders = new_folders($previous_text, $(this).text());
+
+                                for(var $i = 0; $i < $new_folders.length - 1; $i++) {
+                                    if($new_folders[$i] !== null) {
+                                        $("<h" + ($i + 2) + ">", {
+                                            text: "Папка " + $new_folders[$i]
+                                        }).insertBefore($(this));
+                                    }
+                                }
+
+                                $(this).replaceWith($("<h" + ($new_folders.length + 1) + ">", {
+                                    text: $(this).text()
+                                }));
+
+                                $previous_text = $(this).text();
                             });
                         });
                     });
