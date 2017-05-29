@@ -1,4 +1,5 @@
 <!doctype html>
+<!--suppress JSUnresolvedVariable, JSUnresolvedFunction -->
 <html>
 <head>
     <meta charset="utf-8"/>
@@ -14,7 +15,6 @@
             -webkit-user-select: none;
             -ms-user-select: none;
             user-select: none;
-            -o-user-select: none;
         }
 
         div#layout {
@@ -22,8 +22,6 @@
             -webkit-user-select: auto;
             -ms-user-select: initial;
             user-select: initial;
-            -o-user-select: auto;
-
         }
 
         body > div {
@@ -65,6 +63,7 @@
             font-size: 10pt;
         }
 
+        /*noinspection CssUnusedSymbol*/
         .hljs {
             background: white;
         }
@@ -109,14 +108,18 @@
             <tr>
                 <td>
                     <p>Выбрать по расширениям:</p>
-                    <p><select id="extension_list" size="8" multiple>
-                        <!-- Populated programmatically -->
-                    </select></p>
+                    <p>
+                        <select id="extension_list" size="8" multiple title="Список расширений">
+                            <!-- Populated programmatically -->
+                        </select>
+                    </p>
                 </td>
                 <td class="height100" rowspan="2">
-                    <p class="height100"><select id="file_list" multiple>
-                        <!-- Populated programmatically -->
-                    </select></p>
+                    <p class="height100">
+                        <select id="file_list" multiple title="Список файлов">
+                            <!-- Populated programmatically -->
+                        </select>
+                    </p>
                 </td>
             </tr>
             <tr>
@@ -144,7 +147,9 @@
     <div style="width: 800px; margin: auto;">
         <hr/>
 
-        <p>3. Выделить размеченный текст с помощью Cmd+A, скопировать его и вставить в <a href="#">шаблон документа</a>.</p>
+        <p>
+            3. Выделить размеченный текст с помощью Cmd+A, скопировать его и вставить в <a href="#">шаблон документа</a>.
+        </p>
     </div>
     <div id="layout">
         <!-- Populated programmatically -->
@@ -243,8 +248,8 @@
 
                     zip.forEach(function(relativePath, zipEntry) {
                         if(!zipEntry.dir) {
-                            $file_name = zipEntry.name;
-                            $file_extension = $file_name.split(".").pop().toLowerCase();
+                            var $file_name = zipEntry.name;
+                            var $file_extension = $file_name.split(".").pop().toLowerCase();
 
                             $file_list_select.append($("<option>", {
                                 value: $file_name,
@@ -294,7 +299,7 @@
                     });
 
                     $("div#step2").slideDown();
-                }, function(e) {
+                }, function() {
                     $("#error_unzip").show();
                 });
         });
@@ -324,7 +329,7 @@
             $file_list_select.change();
         });
 
-        $file_list_select.on("change", function(evt) {
+        $file_list_select.on("change", function() {
             var $file_extensions = {};
 
             $file_list_select.val().forEach(function($filename) {
@@ -342,10 +347,12 @@
             });
         });
 
-        $("input#pognali").on("click", function(evt) {
-            $("div#step3").hide();
+        $("input#pognali").on("click", function() {
+            var $div_step3 = $("div#step3");
+            $div_step3.hide();
 
-            $("div#error_none_selected").hide();
+            var $div_error_none_selected = $("div#error_none_selected");
+            $div_error_none_selected.hide();
 
             var $selected_options = $file_list_select.children("option:selected");
 
@@ -389,10 +396,10 @@
                         });
                     });
 
-                $("div#step3").slideDown();
+                $div_step3.slideDown();
             }
             else {
-                $("div#error_none_selected").show();
+                $div_error_none_selected.show();
             }
         });
     })();
