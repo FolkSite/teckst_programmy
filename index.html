@@ -422,7 +422,7 @@
                                 return $new_folders;
                             };
 
-                            $("div#layout pre").hide();
+//                            $("div#layout pre").hide();
 
                             var $previous_text = "";
 
@@ -443,6 +443,42 @@
 
                                 $previous_text = $(this).text();
                             });
+
+                            /*
+                             * Add heading numbers
+                             */
+
+                            var $current_number = [0];
+                            var $previous_level = 2;
+
+                            $("div#layout :header").each(function() {
+                                var $level = parseInt($(this).prop("tagName")[1]);
+
+                                if($level > $previous_level) {
+                                    for(var $i = 0; $i < $level - $previous_level; $i++) {
+                                        $current_number.push(0);
+                                    }
+                                }
+
+                                if($level < $previous_level) {
+                                    for(var $i = 0; $i < $previous_level - $level; $i++) {
+                                        $current_number.pop();
+                                    }
+                                }
+
+                                $previous_level = $level;
+
+                                $current_number[$current_number.length - 1] += 1;
+
+                                var $number_string = "";
+
+                                $current_number.forEach(function($pidr) {
+                                    $number_string += $pidr + ".";
+                                });
+
+                                $(this).text($number_string + " " + $(this).text());
+
+                            })
                         });
                     });
 
