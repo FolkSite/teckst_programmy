@@ -185,7 +185,7 @@
         ["VB.NET", "vb"]
     ];
 
-    var $default_syntax_for_extension = {
+    var default_syntax_for_extension = {
         "sh": "sh",
         "cs": "cs",
 
@@ -225,13 +225,13 @@
     };
 
     (function() {
-        var $zip_archive;
+        var zip_archive;
 
         var $file_list_select = $("select#file_list");
         var $extension_list_select = $("select#extension_list");
 
         $("#file").on("change", function(evt) {
-            $zip_archive = evt.target.files[0];
+            zip_archive = evt.target.files[0];
 
             $file_list_select.html("");
             $extension_list_select.html("");
@@ -244,41 +244,40 @@
 
             JSZip.loadAsync(evt.target.files[0])
                 .then(function(zip) {
-                    var $file_extensions = {};
+                    var file_extensions = {};
 
                     zip.forEach(function(relativePath, zipEntry) {
                         if(!zipEntry.dir) {
-                            var $file_name = zipEntry.name;
-                            var $file_extension = $file_name.split(".").pop().toLowerCase();
+                            var file_name = zipEntry.name;
+                            var file_extension = file_name.split(".").pop().toLowerCase();
 
                             $file_list_select.append($("<option>", {
-                                value: $file_name,
-                                text: $file_name
+                                value: file_name,
+                                text: file_name
                             }));
 
-                            $file_extensions[$file_extension] = true;
+                            file_extensions[file_extension] = true;
                         }
                     });
 
                     var $syntax_highlighting_settings = $(".syntax_highlighting_settings");
                     $syntax_highlighting_settings.html("");
 
-                    for(var $extension in $file_extensions) {
+                    for(var extension in file_extensions) {
                         $extension_list_select.append($("<option>", {
-                            value: $extension,
-                            text: "." + $extension
+                            value: extension,
+                            text: "." + extension
                         }));
 
                         $syntax_highlighting_settings.append($("<li>", {
-                            text: "." + $extension + ": ",
+                            text: "." + extension + ": ",
                             "class": "syntax_classes"
                         }).hide().append($("<select>", {
-                            id: $extension
+                            id: extension
                         })));
                     }
 
                     var $syntax_classes_selects = $(".syntax_classes select");
-
                     $syntax_classes_selects.html("");
 
                     $syntax_classes.forEach(function($syntax_class) {
@@ -289,12 +288,12 @@
                     });
 
                     $syntax_classes_selects.each(function() {
-                        var $current_extension = $(this).attr("id");
+                        var current_extension = $(this).attr("id");
 
-                        var $default_syntax = $default_syntax_for_extension[$current_extension];
+                        var default_syntax = default_syntax_for_extension[current_extension];
 
-                        if($default_syntax) {
-                            $(this).val($default_syntax);
+                        if(default_syntax) {
+                            $(this).val(default_syntax);
                         }
                     });
 
@@ -309,16 +308,16 @@
          * TODO: (see e967ed8 commit message)
          */
         $extension_list_select.on("change", function(evt) {
-            var $extensions = $(evt.target).val();
+            var extensions = $(evt.target).val();
 
             $("select#file_list option").each(function() {
-                var $current_extension = $(this).attr("value").split(".").pop().toLowerCase();
+                var current_extension = $(this).attr("value").split(".").pop().toLowerCase();
 
                 /*
                  * TODO: Fix the problem when a change of the selected property of an option is no not visually
                  * TODO: represented in Chrome if the user has clicked on the option before
                  */
-                if($extensions.indexOf($current_extension) >= 0) {
+                if(extensions.indexOf(current_extension) >= 0) {
                     $(this).attr("selected", true);
                 }
                 else {
@@ -330,10 +329,10 @@
         });
 
         $file_list_select.on("change", function() {
-            var $file_extensions = {};
+            var file_extensions = {};
 
             $file_list_select.val().forEach(function($filename) {
-                $file_extensions[$filename.split(".").pop()] = true;
+                file_extensions[$filename.split(".").pop()] = true;
             });
 
             var $syntax_classes_selects = $(".syntax_classes");
@@ -341,7 +340,7 @@
             $syntax_classes_selects.hide();
 
             $syntax_classes_selects.each(function() {
-                if($file_extensions[$(this).children("select").attr("id")]) {
+                if(file_extensions[$(this).children("select").attr("id")]) {
                     $(this).show();
                 }
             });
@@ -361,17 +360,17 @@
 
                 $results_div.html("");
 
-                var $selected_files = {};
+                var selected_files = {};
 
                 $selected_options.each(function() {
-                    $selected_files[$(this).attr("value")] = true;
+                    selected_files[$(this).attr("value")] = true;
                 });
 
-                JSZip.loadAsync($zip_archive)
+                JSZip.loadAsync(zip_archive)
                     .then(function(zip) {
                         zip.forEach(function(relativePath, zipEntry) {
-                            if($selected_files[zipEntry.name]) {
-                                var $extension = zipEntry.name.split(".").pop();
+                            if(selected_files[zipEntry.name]) {
+                                var extension = zipEntry.name.split(".").pop();
 
                                 zipEntry.async("string").then(
                                     function(content) {
@@ -381,7 +380,7 @@
 
                                         $results_div.append($("<pre>", {
                                             text: content,
-                                            "class": $(".syntax_classes select#" + $extension).val()
+                                            "class": $(".syntax_classes select#" + extension).val()
                                         }));
                                     }
                                 );
@@ -401,82 +400,82 @@
                              * Add headings for folders
                              */
 
-                            var new_folders = function($one_path, $another_path) {
-                                $one_path = $one_path.split("/");
-                                $another_path = $another_path.split("/");
+                            var folder_diff = function(one_path, another_path) {
+                                one_path = one_path.split("/");
+                                another_path = another_path.split("/");
 
-                                var $new_folders = [];
+                                var new_folders = [];
 
-                                for(var $i = 0; $i < Math.max($one_path.length, $another_path.length); $i++) {
-                                    if($one_path[$i] === $another_path[$i]) {
-                                        $new_folders.push(null);
+                                for(var i = 0; i < Math.max(one_path.length, another_path.length); i++) {
+                                    if(one_path[i] === another_path[i]) {
+                                        new_folders.push(null);
                                     }
-                                    else if($another_path[$i] === undefined) {
+                                    else if(another_path[i] === undefined) {
                                         break;
                                     }
                                     else {
-                                        $new_folders.push($another_path[$i]);
+                                        new_folders.push(another_path[i]);
                                     }
                                 }
 
-                                return $new_folders;
+                                return new_folders;
                             };
 
 //                            $("div#layout pre").hide();
 
-                            var $previous_text = "";
+                            var previous_text = "";
 
                             $("div#layout h2").each(function() {
-                                $new_folders = new_folders($previous_text, $(this).text());
+                                var new_folders = folder_diff(previous_text, $(this).text());
 
-                                for(var $i = 0; $i < $new_folders.length - 1; $i++) {
-                                    if($new_folders[$i] !== null) {
-                                        $("<h" + ($i + 2) + ">", {
-                                            text: "Папка " + $new_folders[$i]
+                                for(var i = 0; i < new_folders.length - 1; i++) {
+                                    if(new_folders[i] !== null) {
+                                        $("<h" + (i + 2) + ">", {
+                                            text: "Папка " + new_folders[i]
                                         }).insertBefore($(this));
                                     }
                                 }
 
-                                $(this).replaceWith($("<h" + ($new_folders.length + 1) + ">", {
+                                $(this).replaceWith($("<h" + (new_folders.length + 1) + ">", {
                                     text: $(this).text()
                                 }));
 
-                                $previous_text = $(this).text();
+                                previous_text = $(this).text();
                             });
 
                             /*
                              * Add heading numbers
                              */
 
-                            var $current_number = [0];
-                            var $previous_level = 2;
+                            var current_number = [0];
+                            var previous_level = 2;
 
                             $("div#layout :header").each(function() {
-                                var $level = parseInt($(this).prop("tagName")[1]);
+                                var level = parseInt($(this).prop("tagName")[1]);
 
-                                if($level > $previous_level) {
-                                    for(var $i = 0; $i < $level - $previous_level; $i++) {
-                                        $current_number.push(0);
+                                if(level > previous_level) {
+                                    for(var i = 0; i < level - previous_level; i++) {
+                                        current_number.push(0);
                                     }
                                 }
 
-                                if($level < $previous_level) {
-                                    for(var $i = 0; $i < $previous_level - $level; $i++) {
-                                        $current_number.pop();
+                                if(level < previous_level) {
+                                    for(var i = 0; i < previous_level - level; i++) {
+                                        current_number.pop();
                                     }
                                 }
 
-                                $previous_level = $level;
+                                previous_level = level;
 
-                                $current_number[$current_number.length - 1] += 1;
+                                current_number[current_number.length - 1] += 1;
 
-                                var $number_string = "";
+                                var number_string = "";
 
-                                $current_number.forEach(function($pidr) {
-                                    $number_string += $pidr + ".";
+                                current_number.forEach(function($pidr) {
+                                    number_string += $pidr + ".";
                                 });
 
-                                $(this).text($number_string + " " + $(this).text());
+                                $(this).text(number_string + " " + $(this).text());
 
                             })
                         });
